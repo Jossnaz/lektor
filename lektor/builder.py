@@ -1138,7 +1138,7 @@ class Builder(object):
                 to_build = self.get_initial_build_queue()
                 while to_build:
                     source = to_build.popleft()
-                    prog, build_state = self.build(source, path_cache=path_cache)
+                    prog, build_state = self.build(source, path_cache=path_cache) # @@@@@LUKAS parallelize
                     self.extend_build_queue(to_build, prog)
                     failures += len(build_state.failed_artifacts)
                 self.env.plugin_controller.emit('after-build-all', builder=self)
