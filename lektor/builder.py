@@ -1134,7 +1134,6 @@ class Builder(object):
         # We keep a dummy connection here that does not do anything which
         # helps us with the WAL handling.  See #144
         con = self.connect_to_database()
-        print('welcome to buildall')
         try:
             with reporter.build('build', self):
                 self.env.plugin_controller.emit('before-build-all', builder=self)
