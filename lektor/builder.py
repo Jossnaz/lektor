@@ -1,3 +1,4 @@
+import copy
 import locale
 import os
 import sys
@@ -22,6 +23,7 @@ from lektor.sourcesearch import find_files
 from lektor.utils import prune_file_and_folder, fs_enc
 from lektor.environment import PRIMARY_ALT
 from lektor.buildfailures import FailureController
+from multiprocessing.dummy import Pool as ThreadPool
 
 
 def create_tables(con):
@@ -1132,13 +1134,19 @@ class Builder(object):
         # We keep a dummy connection here that does not do anything which
         # helps us with the WAL handling.  See #144
         con = self.connect_to_database()
+        print('welcome to buildall')
         try:
             with reporter.build('build', self):
                 self.env.plugin_controller.emit('before-build-all', builder=self)
                 to_build = self.get_initial_build_queue()
+                paraArgs = []
                 while to_build:
+                    # while to_build:
                     source = to_build.popleft()
+                    # paraArgs.append({'builder': self, 'source': source, 'path_cache': path_cache})
                     prog, build_state = self.build(source, path_cache=path_cache) # @@@@@LUKAS parallelize
+                    # res = lukas_buildStuff(paraArgs) # @@@@@LUKAS parallelize
+                # for prog, build_state in res:
                     self.extend_build_queue(to_build, prog)
                     failures += len(build_state.failed_artifacts)
                 self.env.plugin_controller.emit('after-build-all', builder=self)
@@ -1162,3 +1170,20 @@ class Builder(object):
                         self.update_source_info(prog, build_state)
                     self.extend_build_queue(to_build, prog)
             build_state.prune_source_infos()
+
+
+# def lukas_buildStuff(args, threads = 4):
+#     pool = ThreadPool(threads)
+#     result = pool.map(lukas_buildInner, args)
+#     pool.close()
+#     pool.join()
+#     # print('returning out of buildstuff')
+#     return result
+#
+#
+# def lukas_buildInner(myDict):
+#     # print('innerbuild')
+#     b = myDict['builder']
+#     result = b.build(myDict['source'], myDict['path_cache'])
+#     # print('innerbuild finish')
+#     return result
