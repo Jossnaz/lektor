@@ -521,10 +521,13 @@ def siblings_resolver(node, url_path):
     return node.get_siblings()
 
 
+
+
 class Page(Record):
     """This represents a loaded record."""
     is_attachment = False
     supports_pagination = True
+
 
     @cached_property
     def path(self):
