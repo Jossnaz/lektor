@@ -1501,7 +1501,9 @@ class Pad(object):
 
     def resolve_url_path(self, url_path, include_invisible=False,
                          include_assets=True, alt_fallback=True):
-        print('resolve url path enter ' + str(url_path))
+
+        # LUKAS stopped debug here
+        # print('resolve url path enter ' + str(url_path))
         """Given a URL path this will find the correct record which also
         might be an attachment.  If a record cannot be found or is unexposed
         the return value will be `None`.
@@ -1529,7 +1531,7 @@ class Pad(object):
 
             rv = node.resolve_url_path(pieces)
             if rv is not None and (include_invisible or rv.is_visible):
-                print('return  ' + str(url_path) + ' rv: ' +  str(rv))
+                # print('return  ' + str(url_path) + ' rv: ' +  str(rv))
                 return rv
 
         if include_assets:
@@ -1537,7 +1539,7 @@ class Pad(object):
                 rv = asset_root.resolve_url_path(pieces)
                 if rv is not None:
                     break
-            print('return  ' + str(url_path) + ' rv: ' +  str(rv))
+            # print('return  ' + str(url_path) + ' rv: ' +  str(rv))
             return rv
         return None
 
